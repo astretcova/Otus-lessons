@@ -142,3 +142,4 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+/hw_3/json/example.json
