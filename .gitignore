@@ -1,4 +1,4 @@
 /venv/
 /.idea/
-/HW2
-/.pytest_cache
+/.pytest_cache/
+/HW2/
