@@ -1,13 +1,13 @@
 import pytest
 from jsonschema import validate
 import json
-
+import os
 
 id_MAX = 200
 
 
 def assert_valid_schema(data: dict, schema_file: str):
-    with open(schema_file) as f:
+    with open(os.path.join(os.path.dirname(__file__),schema_file)) as f:
         schema = json.load(f)
 
     return validate(instance=data, schema=schema)
@@ -19,14 +19,14 @@ def test_get_todos(session, todos_url):
     todos = response.json()
     assert len(todos) == id_MAX
 
-    assert_valid_schema(todos, 'todo_list_shema.json')
+    assert_valid_schema(todos, 'todo_list_schema.json')
 
 
 def test_get_todo(session, todos_url):
     res = session.get(url=f'{todos_url}/1')
     todo = res.json()
 
-    assert_valid_schema(todo, 'todo_shema.json')
+    assert_valid_schema(todo, 'todo_schema.json')
 
 
 @pytest.mark.parametrize('id',
@@ -53,12 +53,10 @@ def test_get_negative(session, todos_url, id):
      [
          (1, 20),
          (2, 20),
-         (10, 20),
-         (0, 0),
-         (11, 0)
+         (10, 20)
      ]
-)  # todo: проверить фильтрацию по другим параметрам
-def test_get_filtering(session, todos_url, user_id, expected_len):
+)
+def test_get_filtering_positive(session, todos_url, user_id, expected_len):
     res = session.get(url=f'{todos_url}?userId={user_id}')
 
     assert res.status_code == 200, res.text
@@ -67,7 +65,22 @@ def test_get_filtering(session, todos_url, user_id, expected_len):
     for todo in todos:
         assert todo['userId'] == user_id
 
-    #assert_valid_schema(todos, 'todo_list_shema.json')
+    #assert_valid_schema(todos, 'todo_list_schema.json')
+
+
+@pytest.mark.parametrize(
+    'user_id, expected_len',
+     [
+         (0, 0),
+         (11, 0)
+     ]
+)
+def test_get_filtering_negative(session, todos_url, user_id, expected_len):
+    res = session.get(url=f'{todos_url}?userId={user_id}')
+
+    assert res.status_code == 200, res.text
+    todos = res.json()
+    assert len(todos) == expected_len, res.text
 
 
 def test_post_negative(session, todos_url):
@@ -129,7 +142,7 @@ def test_put_positive(session, todos_url, userId, id, title, completed, expected
     assert j['title'] == title
     assert j['completed'] == completed
 
-        #assert_valid_schema(j, 'todo_shema.json')
+        #assert_valid_schema(j, 'todo_schema.json')
 
 
 @pytest.mark.parametrize(
@@ -151,7 +164,7 @@ def test_put_negative(session, todos_url, userId, id, title, completed, expected
     'id, field, value',
     [
         (1, 'title', 'test title'),
-        (100, 'complete', True),
+        (100, 'completed', True),
         (200, 'userId', 2),
     ]
 )
