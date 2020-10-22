@@ -1,36 +1,16 @@
 import pytest
-import jsonschema
-import requests
+from jsonschema import validate
+import json
 
 
 id_MAX = 200
 
-todo_response = {
-    'type': 'object',
-    'properties': {
-        'userId': {'type': 'integer'},
-        'id': {'type': 'integer'},
-        'title': {'type': 'string'},
-        'completed': {'type': 'boolean'},
-    },
-    'required': ['userId', 'id', 'title', 'completed'],
-    'additionalProperties': False,
-}
 
-get_todos_response_schema = {
-    'type': 'array',
-    'items': todo_response,
-}
+def assert_valid_schema(data: dict, schema_file: str):
+    with open(schema_file) as f:
+        schema = json.load(f)
 
-
-@pytest.fixture
-def todos_url():
-    return 'https://jsonplaceholder.typicode.com/todos'
-
-
-@pytest.fixture(scope="module")
-def session():
-    return requests.Session()
+    return validate(instance=data, schema=schema)
 
 
 def test_get_todos(session, todos_url):
@@ -38,9 +18,15 @@ def test_get_todos(session, todos_url):
     assert response.status_code == 200, response.text
     todos = response.json()
     assert len(todos) == id_MAX
-    print(todos)
 
-    jsonschema.validate(todos, get_todos_response_schema)
+    assert_valid_schema(todos, 'todo_list_shema.json')
+
+
+def test_get_todo(session, todos_url):
+    res = session.get(url=f'{todos_url}/1')
+    todo = res.json()
+
+    assert_valid_schema(todo, 'todo_shema.json')
 
 
 @pytest.mark.parametrize('id',
@@ -50,6 +36,7 @@ def test_get_positive(session, todos_url, id):
 
     assert res.status_code == 200, res.text
     assert res.json()['id'] == id
+
 
 
 @pytest.mark.parametrize('id',
@@ -80,7 +67,7 @@ def test_get_filtering(session, todos_url, user_id, expected_len):
     for todo in todos:
         assert todo['userId'] == user_id
 
-    jsonschema.validate(todos, get_todos_response_schema)
+    #assert_valid_schema(todos, 'todo_list_shema.json')
 
 
 def test_post_negative(session, todos_url):
@@ -111,12 +98,16 @@ def test_post_positive(session, todos_url, id, title, complited, user_id):
 
 
 def test_put(session, todos_url):
+    userid = 1
     title = 'qwerty'
     completed = 'true'
     payload = {'title': title, 'completed': completed, 'id': 1}
-    res = session.put(url=f'{todos_url}/{id}', json=payload)
+    res = session.put(url=f'{todos_url}/{userid}', json=payload)
 
-    assert res.status_code == 500, res.text
+    assert res.status_code == 200, res.text
+    res_json = res.json()
+    assert res_json['title'] == title
+    assert res_json['completed'] == completed
 
 
 @pytest.mark.parametrize(
@@ -124,30 +115,43 @@ def test_put(session, todos_url):
     [
         (1, 1, 'qwert', False, 200),
         (1, 200, 'qwert', False, 200),
+    ]
+)
+def test_put_positive(session, todos_url, userId, id, title, completed, expected_status):
+    payload = {'title': title, 'completed': completed, 'userId': userId, 'id': id}
+    res = session.put(url=f'{todos_url}/{id}', json=payload)
+
+    assert res.status_code == expected_status
+
+    j = res.json()
+    assert j['id'] == id
+    assert j['userId'] == userId
+    assert j['title'] == title
+    assert j['completed'] == completed
+
+        #assert_valid_schema(j, 'todo_shema.json')
+
+
+@pytest.mark.parametrize(
+    'userId, id, title, completed, expected_status',
+    [
         (1, 0, 'qwert', False, 500),
         (1, -1, 'qwert', False, 500),
         (1, 201, 'qwert', False, 500),
     ]
 )
-def test_put_todos(session, todos_url, userId, id, title, completed, expected_status):
+def test_put_negative(session, todos_url, userId, id, title, completed, expected_status):
     payload = {'title': title, 'completed': completed, 'userId': userId, 'id': id}
     res = session.put(url=f'{todos_url}/{id}', json=payload)
 
     assert res.status_code == expected_status
-    if str(expected_status)[0] == '2':
-        j = res.json()
-        assert j['id'] == id
-        assert j['userId'] == userId
-        assert j['title'] == title
-        assert j['completed'] == completed
-        jsonschema.validate(j, todo_response)
 
 
 @pytest.mark.parametrize(
     'id, field, value',
     [
         (1, 'title', 'test title'),
-        (100, 'complete', False),
+        (100, 'complete', True),
         (200, 'userId', 2),
     ]
 )
