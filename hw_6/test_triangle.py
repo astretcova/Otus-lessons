@@ -26,7 +26,7 @@ class Triangle:
         (3, 4, 2, 9)
     ]
 )
-def test_Triangle_perimeter(a, b, c, perimeter):
+def test_triangle_perimeter(a, b, c, perimeter):
     q = Triangle(a, b, c)
     assert q.perimeter() == perimeter
 
@@ -37,7 +37,7 @@ def test_Triangle_perimeter(a, b, c, perimeter):
         (3, 4, 2, 3)
     ]
 )
-def test_Triangle_area(a, b, c, area):
+def test_triangle_area(a, b, c, area):
     instance = Triangle(a, b, c)
     assert instance.area() == area
 
@@ -48,7 +48,7 @@ def test_Triangle_area(a, b, c, area):
         (3, 4, 2)
     ]
 )
-def test_Triangle(a, b, c):
+def test_triangle(a, b, c):
     instance = Triangle(a, b, c)
     assert instance.a == a
     assert instance.b == b
@@ -56,8 +56,10 @@ def test_Triangle(a, b, c):
 
 
 def test_name():
-    assert Triangle.name == "Triangle"
+    instance = Triangle(1,2,1)
+    assert instance.name == "Triangle"
 
 
 def test_angles():
-    assert Triangle.angles == 3
+    instance = Triangle(1, 2, 1)
+    assert instance.angles == 3

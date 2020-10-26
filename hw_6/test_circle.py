@@ -1,5 +1,5 @@
-import pytest
 from math import pi
+import pytest
 
 
 class Circle:
@@ -12,20 +12,20 @@ class Circle:
     def area(self):
         return round(pi * self.r ** 2, 2)
 
-    def dlina_okr(self):
+    def perimeter(self):
         x = 2 * pi * self.r
         return round(x, 2)
 
 
 @pytest.mark.parametrize(
-    'r, dlina_okr',
+    'r, perimeter',
     [
         (3, 18.85)
     ]
 )
-def test_Circle_dlina_okr(r, dlina_okr):
+def test_circle_perimeter(r, perimeter):
     instance = Circle(r)
-    assert instance.dlina_okr() == dlina_okr
+    assert instance.perimeter() == perimeter
 
 
 @pytest.mark.parametrize(
@@ -34,7 +34,7 @@ def test_Circle_dlina_okr(r, dlina_okr):
         (3, 28.27)
     ]
 )
-def test_Circle_area(r, area):
+def test_circle_area(r, area):
     instance = Circle(r)
     assert instance.area() == area
 
@@ -45,14 +45,16 @@ def test_Circle_area(r, area):
         (3.0)
     ]
 )
-def test_Circle(r):
+def test_circle(r):
     instance = Circle(r)
     assert instance.r == r
 
 
 def test_name():
-    assert Circle.name == "Circle"
+    x = Circle(1)
+    assert x.name == "Circle"
 
 
 def test_angles():
-    assert Circle.angles == 0
+    x = Circle(1)
+    assert x.angles == 0

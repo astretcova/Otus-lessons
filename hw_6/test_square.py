@@ -22,7 +22,7 @@ class Square:
         (3.0, 12)
     ]
 )
-def test_Square_perimeter(a, perimeter):
+def test_square_perimeter(a, perimeter):
     instance = Square(a)
     assert instance.perimeter() == perimeter
 
@@ -33,7 +33,7 @@ def test_Square_perimeter(a, perimeter):
         (3, 9)
     ]
 )
-def test_Square_area(a, area):
+def test_square_area(a, area):
     instance = Square(a)
     assert instance.area() == area
 
@@ -44,14 +44,16 @@ def test_Square_area(a, area):
         (3)
     ]
 )
-def test_Square(a):
+def test_square(a):
     instance = Square(a)
     assert instance.a == a
 
 
 def test_name():
-    assert Square.name == "Square"
+    instance = Square(1)
+    assert instance.name == "Square"
 
 
 def test_angles():
-    assert Square.angles == 4
+    instance = Square(1)
+    assert instance.angles == 4

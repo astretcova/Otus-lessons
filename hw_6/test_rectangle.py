@@ -22,7 +22,7 @@ class Rectangle:
         (3, 4, 14)
     ]
 )
-def test_Rectangle_perimeter(a, b, perimeter):
+def test_rectangle_perimeter(a, b, perimeter):
     instance = Rectangle(a, b)
     assert instance.perimeter() == perimeter
 
@@ -33,7 +33,7 @@ def test_Rectangle_perimeter(a, b, perimeter):
         (3.0, 4.5, 13.5)
     ]
 )
-def test_Rectangle_area(a, b, area):
+def test_rectangle_area(a, b, area):
     instance = Rectangle(a, b)
     assert instance.area() == area
 
@@ -44,16 +44,18 @@ def test_Rectangle_area(a, b, area):
         (3.0, 4)
     ]
 )
-def test_Rectangle(a, b):
+def test_rectangle(a, b):
     instance = Rectangle(a, b)
     assert instance.a == a
     assert instance.b == b
 
 
 def test_name():
-    assert Rectangle.name == "Rectangle"
+    instance = Rectangle(1, 1)
+    assert instance.name == "Rectangle"
 
 
 def test_angles():
-    assert Rectangle.angles == 4
+    instance = Rectangle(1, 1)
+    assert instance.angles == 4
 
