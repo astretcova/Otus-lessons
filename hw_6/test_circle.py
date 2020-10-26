@@ -1,26 +1,14 @@
-from math import pi
 import pytest
 
-
-class Circle:
-    name = 'Circle'
-    angles = 0
-
-    def __init__(self, r):
-        self.r = r
-
-    def area(self):
-        return round(pi * self.r ** 2, 2)
-
-    def perimeter(self):
-        x = 2 * pi * self.r
-        return round(x, 2)
+from .figures import Circle
 
 
 @pytest.mark.parametrize(
     'r, perimeter',
     [
-        (3, 18.85)
+        (3, 18.85),
+        (-10, 62.83)
+
     ]
 )
 def test_circle_perimeter(r, perimeter):
@@ -31,7 +19,8 @@ def test_circle_perimeter(r, perimeter):
 @pytest.mark.parametrize(
     'r, area',
     [
-        (3, 28.27)
+        (3, 28.27),
+        (-10, 314.16)
     ]
 )
 def test_circle_area(r, area):
@@ -41,13 +30,11 @@ def test_circle_area(r, area):
 
 @pytest.mark.parametrize(
     'r',
-    [
-        (3.0)
-    ]
+    [3.0, -10, 0]
 )
 def test_circle(r):
     instance = Circle(r)
-    assert instance.r == r
+    assert instance.r == abs(r)
 
 
 def test_name():

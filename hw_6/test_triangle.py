@@ -1,29 +1,13 @@
 import pytest
 
-
-class Triangle:
-    name = 'Triangle'
-    angles = 3
-
-    def __init__(self, a, b, c):
-        self.a = a
-        self.b = b
-        self.c = c
-
-    def area(self):
-        p = self.perimeter() / 2
-        s = (p * (p - self.a) * (p - self.b) * (p - self.c)) ** 0.5
-        return round(s)
-
-    def perimeter(self):
-        x = self.a + self.b + self.c
-        return x
+from .figures import Triangle
 
 
 @pytest.mark.parametrize(
     'a, b, c, perimeter',
     [
-        (3, 4, 2, 9)
+        (3, 4, 2, 9),
+        (-4, -2, 6, 12)
     ]
 )
 def test_triangle_perimeter(a, b, c, perimeter):
@@ -34,7 +18,8 @@ def test_triangle_perimeter(a, b, c, perimeter):
 @pytest.mark.parametrize(
     'a, b, c, area',
     [
-        (3, 4, 2, 3)
+        (3, 4, 2, 3),
+        (-4, 2, 6, 0)
     ]
 )
 def test_triangle_area(a, b, c, area):
@@ -45,18 +30,19 @@ def test_triangle_area(a, b, c, area):
 @pytest.mark.parametrize(
     'a, b, c',
     [
-        (3, 4, 2)
+        (3, 4, 2),
+        (-4, -2, 6)
     ]
 )
 def test_triangle(a, b, c):
     instance = Triangle(a, b, c)
-    assert instance.a == a
-    assert instance.b == b
-    assert instance.c == c
+    assert instance.a == abs(a)
+    assert instance.b == abs(b)
+    assert instance.c == abs(c)
 
 
 def test_name():
-    instance = Triangle(1,2,1)
+    instance = Triangle(1, 2, 1)
     assert instance.name == "Triangle"
 
 

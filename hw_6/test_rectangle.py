@@ -1,25 +1,13 @@
 import pytest
 
-
-class Rectangle:
-    name = 'Rectangle'
-    angles = 4
-
-    def __init__(self, a, b):
-        self.a = a
-        self.b = b
-
-    def area(self):
-        return self.a * self.b
-
-    def perimeter(self):
-        return 2 * (self.a + self.b)
+from .figures import Rectangle
 
 
 @pytest.mark.parametrize(
     'a, b, perimeter',
     [
-        (3, 4, 14)
+        (3, 4, 14),
+        (0.1, -4, 8.2)
     ]
 )
 def test_rectangle_perimeter(a, b, perimeter):
@@ -30,7 +18,8 @@ def test_rectangle_perimeter(a, b, perimeter):
 @pytest.mark.parametrize(
     'a, b, area',
     [
-        (3.0, 4.5, 13.5)
+        (3.0, 4.5, 13.5),
+        (1, -3, 3)
     ]
 )
 def test_rectangle_area(a, b, area):
@@ -41,7 +30,8 @@ def test_rectangle_area(a, b, area):
 @pytest.mark.parametrize(
     'a, b',
     [
-        (3.0, 4)
+        (3.0, 4),
+        (0, 4)
     ]
 )
 def test_rectangle(a, b):

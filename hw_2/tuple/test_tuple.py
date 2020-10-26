@@ -2,6 +2,7 @@ import pytest
 
 t = 12345, 54321, 'hello!'
 
+
 def test_simple():
     assert (0) == 0
 

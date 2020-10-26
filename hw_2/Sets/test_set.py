@@ -2,6 +2,7 @@ import pytest
 
 basket = {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}
 
+
 def test_simple():
     assert basket == {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}
 
@@ -51,7 +52,7 @@ def test_set_letters_in_a_or_b_or_both(test_case):
 def test_set4():
     a = set('abracadabra')
     b = set('alacazam')
-    assert a & b  == {'a', 'c'}
+    assert a & b == {'a', 'c'}
 
 
 def test_set5():
