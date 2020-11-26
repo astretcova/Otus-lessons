@@ -3,7 +3,7 @@ from jsonschema import validate
 import json
 import os
 
-id_MAX = 200
+ID_MAX = 200
 
 
 def assert_valid_schema(data: dict, schema_file: str):
@@ -17,7 +17,7 @@ def test_get_todos(session, todos_url):
     response = session.get(todos_url)
     assert response.status_code == 200, response.text
     todos = response.json()
-    assert len(todos) == id_MAX
+    assert len(todos) == ID_MAX
 
     assert_valid_schema(todos, 'todo_list_schema.json')
 
@@ -30,13 +30,12 @@ def test_get_todo(session, todos_url):
 
 
 @pytest.mark.parametrize('id',
-                         [1, id_MAX, 100])
+                         [1, ID_MAX, 100])
 def test_get_positive(session, todos_url, id):
     res = session.get(url=f'{todos_url}/{id}')
 
     assert res.status_code == 200, res.text
     assert res.json()['id'] == id
-
 
 
 @pytest.mark.parametrize('id',
@@ -65,8 +64,6 @@ def test_get_filtering_positive(session, todos_url, user_id, expected_len):
     for todo in todos:
         assert todo['userId'] == user_id
 
-    #assert_valid_schema(todos, 'todo_list_schema.json')
-
 
 @pytest.mark.parametrize(
     'user_id, expected_len',
@@ -91,23 +88,23 @@ def test_post_negative(session, todos_url):
 
 
 @pytest.mark.parametrize(
-    'id, title, complited, user_id',
+    'id, title, completed, user_id',
     [
         (201, '', True, 1),
         (202, '123', False, 2),
-        (300, 'abc', False, 10),
+        (203, 'abc', False, 10),
     ]
 )
-def test_post_positive(session, todos_url, id, title, complited, user_id):
-    payload = {'id': id, 'title': title, 'complited': complited, 'userId': user_id}
+def test_post_positive(session, todos_url, id, title, completed, user_id):
+    payload = {'id': id, 'title': title, 'completed': completed, 'userId': user_id}
     res = session.post(url=todos_url, json=payload)
 
     assert res.status_code == 201, res.text
     j = res.json()
-    assert j['id'] == id_MAX + 1
+    assert j['id'] == ID_MAX + 1
     assert j['userId'] == user_id
     assert j['title'] == title
-    assert j['complited'] == complited
+    assert j['completed'] == completed
 
 
 def test_put(session, todos_url):
@@ -124,17 +121,17 @@ def test_put(session, todos_url):
 
 
 @pytest.mark.parametrize(
-    'userId, id, title, completed, expected_status',
+    'userId, id, title, completed',
     [
-        (1, 1, 'qwert', False, 200),
-        (1, 200, 'qwert', False, 200),
+        (1, 1, 'qwert', False),
+        (1, 200, 'qwert', False),
     ]
 )
-def test_put_positive(session, todos_url, userId, id, title, completed, expected_status):
+def test_put_positive(session, todos_url, userId, id, title, completed):
     payload = {'title': title, 'completed': completed, 'userId': userId, 'id': id}
     res = session.put(url=f'{todos_url}/{id}', json=payload)
 
-    assert res.status_code == expected_status
+    assert res.status_code == 200
 
     j = res.json()
     assert j['id'] == id
@@ -142,22 +139,20 @@ def test_put_positive(session, todos_url, userId, id, title, completed, expected
     assert j['title'] == title
     assert j['completed'] == completed
 
-        #assert_valid_schema(j, 'todo_schema.json')
-
 
 @pytest.mark.parametrize(
-    'userId, id, title, completed, expected_status',
+    'userId, id, title, completed',
     [
-        (1, 0, 'qwert', False, 500),
-        (1, -1, 'qwert', False, 500),
-        (1, 201, 'qwert', False, 500),
+        (1, 0, 'qwert', False),
+        (1, -1, 'qwert', False),
+        (1, 201, 'qwert', False),
     ]
 )
-def test_put_negative(session, todos_url, userId, id, title, completed, expected_status):
+def test_put_negative(session, todos_url, userId, id, title, completed):
     payload = {'title': title, 'completed': completed, 'userId': userId, 'id': id}
     res = session.put(url=f'{todos_url}/{id}', json=payload)
 
-    assert res.status_code == expected_status
+    assert res.status_code == 500
 
 
 @pytest.mark.parametrize(

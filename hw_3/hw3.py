@@ -5,6 +5,7 @@ import csv
 def get_users():
     with open("json/users.json") as f:
         result = json.load(f)
+        print(type(result))
     return result
 
 
