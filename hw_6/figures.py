@@ -73,3 +73,5 @@ class Triangle(Figure):
     def perimeter(self):
         x = self.a + self.b + self.c
         return x
+
+
