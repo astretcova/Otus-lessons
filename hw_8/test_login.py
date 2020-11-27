@@ -7,11 +7,6 @@ from urllib.parse import urljoin
 import pytest
 
 
-@pytest.fixture
-def login_url(baseurl_option):
-    return urljoin(baseurl_option, '/index.php?route=account/login')
-
-
 def test_login(login_url, browser):
     browser.get(login_url)
     assert browser.current_url == login_url

@@ -10,16 +10,6 @@ def get_random_string(length = 6):
     return ''.join(random.choice(letters) for i in range(length))
 
 
-@pytest.fixture
-def register_url(baseurl_option):
-    return urljoin(baseurl_option, '/index.php?route=account/register')
-
-
-@pytest.fixture
-def login_url(baseurl_option):
-    return urljoin(baseurl_option, '/index.php?route=account/login')
-
-
 def test_login_register(register_url, browser):
     browser.get(register_url)
     assert browser.current_url == register_url
@@ -58,8 +48,6 @@ def test_logout_register(login_url, browser):
     button = browser.find_element_by_xpath("//div[2]/div/form/input")
     button.click()
     browser.implicitly_wait(5)
-
-
-    button3 = browser.find_element_by_xpath('//div/a[text()="Logout"]')
-    button3.click()
+    button1 = browser.find_element_by_xpath('//div/a[text()="Logout"]')
+    button1.click()
 
