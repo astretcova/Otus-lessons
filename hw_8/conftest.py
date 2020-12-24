@@ -28,7 +28,7 @@ def browser(browser_option):
     if browser_option == 'chrome':
         options = webdriver.ChromeOptions()
         options.add_argument('start-fullscreen')
-        options.add_argument("--headless")
+        #options.add_argument("--headless")
         browser = webdriver.Chrome(chrome_options=options)
         browser.implicitly_wait(TIMEOUT)
         yield browser
@@ -37,7 +37,7 @@ def browser(browser_option):
     if browser_option == 'firefox':
         options = webdriver.FirefoxOptions()
         options.add_argument('start-fullscreen')
-        options.add_argument("--headless")
+        #options.add_argument("--headless")
         browser = webdriver.Firefox(firefox_options=options)
         browser.implicitly_wait(TIMEOUT)
         yield browser
@@ -47,3 +47,13 @@ def browser(browser_option):
 @pytest.fixture
 def admin_url(baseurl_option):
     return urljoin(baseurl_option, '/admin/')
+
+
+@pytest.fixture
+def register_url(baseurl_option):
+    return urljoin(baseurl_option, '/index.php?route=account/register')
+
+
+@pytest.fixture
+def login_url(baseurl_option):
+    return urljoin(baseurl_option, '/index.php?route=account/login')
